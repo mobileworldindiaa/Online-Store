@@ -1,0 +1,19 @@
+body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+.container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+h1 { text-align: center; color: #2c3e50; }
+fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 20px; background: #fafafa; }
+legend { font-weight: bold; color: #2980b9; padding: 0 10px; }
+input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+input[type="file"] { padding: 5px; background: #fff; }
+label { font-weight: 500; display: block; margin-top: 10px; }
+.checkbox-label { display: flex; align-items: center; font-size: 14px; margin-top: 15px; }
+.checkbox-label input { width: auto; margin-right: 10px; }
+.submit-btn, button { width: 100%; padding: 12px; background: #2980b9; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+.submit-btn:hover, button:hover { background: #1c5980; }
+#locBtn { background: #27ae60; }
+.screen { text-align: center; padding: 40px; background: #fff; border-radius: 12px; max-width: 500px; margin: 50px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.hidden { display: none; }
+.spinner { border: 6px solid #f3f3f3; border-top: 6px solid #2980b9; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+#appId { background: #e8f4f8; padding: 10px; border-radius: 6px; color: #2980b9; font-family: monospace; font-size: 18px; }
+.back-btn { background: #e74c3c; }
