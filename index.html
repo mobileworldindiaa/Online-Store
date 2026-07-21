@@ -8,85 +8,121 @@
 </head>
 <body>
 
-<!-- MAIN FORM -->
-<div id="formContainer" class="container">
-    <h1>EMI Application Form</h1>
+<div class="main-wrapper">
+    <div class="form-header">
+        <h1>📋 EMI Application Form</h1>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="step-indicator" id="stepIndicator">Step 1 of 8</div>
+    </div>
+
     <form id="emiForm">
-        <!-- 1. Customer Details -->
-        <fieldset><legend>1. Customer Details</legend>
-            <input type="text" id="fullName" placeholder="Full Name" required>
-            <input type="tel" id="mobile" placeholder="Mobile Number" required>
-            <input type="email" id="email" placeholder="Email Address" required>
+        <!-- STEP 1: Customer Details -->
+        <div class="step" id="step1">
+            <h2>1. Customer Details</h2>
+            <input type="text" id="fullName" placeholder="Full Name *" required>
+            <input type="tel" id="mobile" placeholder="Mobile Number *" pattern="[0-9]{10}" required>
+            <input type="email" id="email" placeholder="Email Address *" required>
             <input type="date" id="dob" required>
-            <select id="gender" required><option value="">Select Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
-            <input type="text" id="fatherName" placeholder="Father's Name" required>
-            <input type="text" id="occupation" placeholder="Occupation" required>
-            <input type="number" id="income" placeholder="Monthly Income (₹)" required>
-        </fieldset>
-
-        <!-- 2. Address Details -->
-        <fieldset><legend>2. Address Details</legend>
-            <input type="text" id="houseNo" placeholder="House/Flat No." required>
-            <input type="text" id="street" placeholder="Street/Locality" required>
-            <input type="text" id="city" placeholder="City" required>
-            <input type="text" id="district" placeholder="District" required>
-            <input type="text" id="state" placeholder="State" required>
-            <input type="text" id="pincode" placeholder="PIN Code" required>
-        </fieldset>
-
-        <!-- 3. Identity Details -->
-        <fieldset><legend>3. Identity Details</legend>
-            <input type="text" id="aadhaar" placeholder="Aadhaar Number" required>
-            <input type="text" id="pan" placeholder="PAN Number" required>
-        </fieldset>
-
-        <!-- 4. Product Details -->
-        <fieldset><legend>4. Product Details</legend>
-            <input type="text" id="productName" placeholder="Product Name" required>
-            <input type="number" id="productPrice" placeholder="Product Price (₹)" required>
-            <input type="number" id="downPayment" placeholder="Down Payment (₹)" required>
-            <select id="emiPlan" required>
-                <option value="">Select EMI Plan</option>
-                <option>3 Months</option><option>6 Months</option><option>9 Months</option>
-                <option>12 Months</option><option>18 Months</option><option>24 Months</option>
+            <select id="gender" required>
+                <option value="">Select Gender *</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
             </select>
-        </fieldset>
+            <input type="text" id="fatherName" placeholder="Father's Name *" required>
+            <input type="text" id="occupation" placeholder="Occupation *" required>
+            <input type="number" id="income" placeholder="Monthly Income (₹) *" required>
+        </div>
 
-        <!-- 5 & 6. Verifications -->
-        <fieldset><legend>5 & 6. Order & Payment Verification</legend>
-            <input type="text" id="orderId" placeholder="Dukaan Order ID" required>
+        <!-- STEP 2: Address Details -->
+        <div class="step" id="step2">
+            <h2>2. Address Details</h2>
+            <input type="text" id="houseNo" placeholder="House/Flat No. *" required>
+            <input type="text" id="street" placeholder="Street/Locality *" required>
+            <input type="text" id="city" placeholder="City *" required>
+            <input type="text" id="district" placeholder="District *" required>
+            <input type="text" id="state" placeholder="State *" required>
+            <input type="text" id="pincode" placeholder="PIN Code *" pattern="[0-9]{6}" required>
+        </div>
+
+        <!-- STEP 3: Identity Details -->
+        <div class="step" id="step3">
+            <h2>3. Identity Details</h2>
+            <input type="text" id="aadhaar" placeholder="Aadhaar Number *" pattern="[0-9]{12}" required>
+            <input type="text" id="pan" placeholder="PAN Number *" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" required>
+        </div>
+
+        <!-- STEP 4: Product Details -->
+        <div class="step" id="step4">
+            <h2>4. Product Details</h2>
+            <input type="text" id="productName" placeholder="Product Name *" required>
+            <input type="number" id="productPrice" placeholder="Product Price (₹) *" required>
+            <input type="number" id="downPayment" placeholder="Down Payment (₹) *" required>
+            <select id="emiPlan" required>
+                <option value="">Select EMI Plan *</option>
+                <option>3 Months</option>
+                <option>6 Months</option>
+                <option>9 Months</option>
+                <option>12 Months</option>
+                <option>18 Months</option>
+                <option>24 Months</option>
+            </select>
+        </div>
+
+        <!-- STEP 5: Order & Payment Verification -->
+        <div class="step" id="step5">
+            <h2>5 & 6. Order & Payment Verification</h2>
+            <input type="text" id="orderId" placeholder="Dukaan Order ID *" required>
+            <label class="file-label">📸 Order Screenshot *</label>
             <input type="file" id="orderScreenshot" accept="image/*" required>
-            <input type="text" id="txnId" placeholder="Payment Transaction ID / UTR" required>
+            <input type="text" id="txnId" placeholder="Payment Transaction ID / UTR *" required>
+            <label class="file-label">📸 Payment Screenshot *</label>
             <input type="file" id="paymentScreenshot" accept="image/*" required>
-        </fieldset>
+        </div>
 
-        <!-- 7. Emergency Contacts -->
-        <fieldset><legend>7. Emergency Contacts</legend>
-            <input type="text" id="brotherName" placeholder="Brother Name" required>
-            <input type="tel" id="brotherMobile" placeholder="Brother Mobile" required>
-            <input type="text" id="parentName" placeholder="Parent Name" required>
-            <input type="tel" id="parentMobile" placeholder="Parent Mobile" required>
-            <input type="text" id="friendName" placeholder="Friend Name" required>
-            <input type="tel" id="friendMobile" placeholder="Friend Mobile" required>
-        </fieldset>
+        <!-- STEP 6: Emergency Contacts -->
+        <div class="step" id="step6">
+            <h2>7. Emergency Contacts</h2>
+            <input type="text" id="brotherName" placeholder="Brother Name *" required>
+            <input type="tel" id="brotherMobile" placeholder="Brother Mobile *" pattern="[0-9]{10}" required>
+            <input type="text" id="parentName" placeholder="Parent Name *" required>
+            <input type="tel" id="parentMobile" placeholder="Parent Mobile *" pattern="[0-9]{10}" required>
+            <input type="text" id="friendName" placeholder="Friend Name *" required>
+            <input type="tel" id="friendMobile" placeholder="Friend Mobile *" pattern="[0-9]{10}" required>
+        </div>
 
-        <!-- 8. Document Upload -->
-        <fieldset><legend>8. Document Upload</legend>
-            <label>Aadhaar Front:</label><input type="file" id="aadhaarFront" accept="image/*" required>
-            <label>Aadhaar Back:</label><input type="file" id="aadhaarBack" accept="image/*" required>
-            <label>PAN Card:</label><input type="file" id="panCard" accept="image/*" required>
-            <label>Customer Selfie (Live Camera):</label><input type="file" id="selfie" accept="image/*" capture="user" required>
-        </fieldset>
+        <!-- STEP 7: Document Upload -->
+        <div class="step" id="step7">
+            <h2>8. Document Upload</h2>
+            <label class="file-label">📄 Aadhaar Front *</label>
+            <input type="file" id="aadhaarFront" accept="image/*" required>
+            <label class="file-label">📄 Aadhaar Back *</label>
+            <input type="file" id="aadhaarBack" accept="image/*" required>
+            <label class="file-label"> PAN Card *</label>
+            <input type="file" id="panCard" accept="image/*" required>
+            <label class="file-label">🤳 Customer Selfie (Live Camera) *</label>
+            <input type="file" id="selfie" accept="image/*" capture="user" required>
+        </div>
 
-        <!-- 9. Permissions & Declaration -->
-        <fieldset><legend>9. Permissions & Declaration</legend>
-            <button type="button" id="locBtn" onclick="getLocation()">📍 Fetch Current Location</button>
-            <input type="text" id="location" placeholder="Location will appear here" readonly>
-            <label class="checkbox-label"><input type="checkbox" id="declaration" required> I hereby declare that all the information provided is true and correct.</label>
-        </fieldset>
+        <!-- STEP 8: Permissions & Submit -->
+        <div class="step" id="step8">
+            <h2>9. Permissions & Declaration</h2>
+            <button type="button" id="locBtn" onclick="getLocation()">📍 Fetch Current Location (Optional)</button>
+            <input type="text" id="location" placeholder="Location (Optional)" readonly>
+            <label class="checkbox-label">
+                <input type="checkbox" id="declaration" required>
+                <span>I hereby declare that all the information provided is true and correct. *</span>
+            </label>
+        </div>
 
-        <!-- 10. Submit -->
-        <button type="submit" id="submitBtn" class="submit-btn">Submit EMI Application</button>
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button type="button" id="prevBtn" class="nav-btn prev" onclick="changeStep(-1)">← Previous</button>
+            <button type="button" id="nextBtn" class="nav-btn next" onclick="changeStep(1)">Next →</button>
+            <button type="submit" id="submitBtn" class="nav-btn submit">Submit EMI Application</button>
+        </div>
     </form>
 </div>
 
@@ -94,15 +130,24 @@
 <div id="loadingScreen" class="screen hidden">
     <div class="spinner"></div>
     <h2>Processing your application...</h2>
+    <p>Please wait while we verify your details.</p>
 </div>
 
 <!-- SUCCESS SCREEN -->
 <div id="successScreen" class="screen hidden">
+    <div class="success-image">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="90" fill="#27ae60"/>
+            <path d="M60 100 L90 130 L140 70" stroke="white" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
     <h2>✅ Application Submitted Successfully!</h2>
-    <p>Your Application ID:</p>
-    <h3 id="appId"></h3>
-    <button onclick="copyId()">📋 Copy Application ID</button>
-    <button onclick="downloadReceipt()">📥 Download Receipt</button>
+    <p class="success-sub">Your application has been received. Please save your Application ID below.</p>
+    <div class="app-id-box">
+        <p class="app-id-label">Your Application ID</p>
+        <h3 id="appId"></h3>
+    </div>
+    <button onclick="copyId()" class="copy-btn">📋 Copy Application ID</button>
     <button onclick="backToHome()" class="back-btn">🏠 Back to Home</button>
 </div>
 
