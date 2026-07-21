@@ -1,45 +1,76 @@
 let currentStep = 1;
 const totalSteps = 8;
 
+// Page load hone par
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Page loaded successfully");
+    updateProgress();
+    
+    // Form submit handler
+    const form = document.getElementById('emiForm');
+    if (form) {
+        console.log("Form found, attaching submit listener");
+        form.addEventListener('submit', handleSubmit, false);
+    }
+});
+
 function updateProgress() {
     const progress = (currentStep / totalSteps) * 100;
-    document.getElementById('progressBar').style.width = progress + '%';
-    document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
+    const progressBar = document.getElementById('progressBar');
+    const stepIndicator = document.getElementById('stepIndicator');
+    
+    if (progressBar) progressBar.style.width = progress + '%';
+    if (stepIndicator) stepIndicator.innerText = `Step ${currentStep} of ${totalSteps}`;
     
     for (let i = 1; i <= totalSteps; i++) {
         const step = document.getElementById('step' + i);
-        if (i === currentStep) step.classList.add('active');
-        else step.classList.remove('active');
+        if (step) {
+            if (i === currentStep) {
+                step.classList.add('active');
+                step.style.display = 'block';
+            } else {
+                step.classList.remove('active');
+                step.style.display = 'none';
+            }
+        }
     }
     
-    document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'block';
-    document.getElementById('nextBtn').style.display = currentStep === totalSteps ? 'none' : 'block';
-    document.getElementById('submitBtn').style.display = currentStep === totalSteps ? 'block' : 'none';
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (prevBtn) prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+    if (nextBtn) nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
+    if (submitBtn) {
+        submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+        submitBtn.disabled = false;
+    }
 }
 
-// FIXED VALIDATION LOGIC
 function validateStep(step) {
     const stepEl = document.getElementById('step' + step);
-    const inputs = stepEl.querySelectorAll('input, select');
+    if (!stepEl) return false;
+    
+    const inputs = stepEl.querySelectorAll('input:not([readonly]), select');
     let valid = true;
+    let firstInvalidField = null;
     
     inputs.forEach(input => {
-        if (input.readOnly) return; // Skip location field
-
-        let isValid = true;
-
+        let isEmpty = false;
+        
         if (input.type === 'checkbox') {
-            if (!input.checked) isValid = false;
+            if (!input.checked && step === 8) isEmpty = true;
         } else if (input.type === 'file') {
-            if (input.files.length === 0) isValid = false;
+            if (input.files.length === 0) isEmpty = true;
         } else {
-            if (!input.value.trim()) isValid = false;
+            if (!input.value || input.value.trim() === '') isEmpty = true;
         }
-
-        if (!isValid) {
+        
+        if (isEmpty) {
             valid = false;
             input.style.borderColor = '#e74c3c';
             input.style.backgroundColor = '#ffebee';
+            if (!firstInvalidField) firstInvalidField = input;
         } else {
             input.style.borderColor = '#27ae60';
             input.style.backgroundColor = '#fff';
@@ -47,48 +78,84 @@ function validateStep(step) {
     });
     
     if (!valid) {
-        alert('⚠️ Please fill all required fields in this step!');
+        if (firstInvalidField) {
+            firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        alert('⚠️ Please fill all required fields marked with *');
     }
+    
     return valid;
 }
 
 function changeStep(direction) {
-    if (direction === 1 && !validateStep(currentStep)) return;
+    console.log("Changing step by:", direction);
+    
+    if (direction === 1) {
+        if (!validateStep(currentStep)) {
+            console.log("Validation failed");
+            return;
+        }
+    }
     
     currentStep += direction;
     if (currentStep < 1) currentStep = 1;
     if (currentStep > totalSteps) currentStep = totalSteps;
+    
+    console.log("Current step is now:", currentStep);
     updateProgress();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function getLocation() {
+    const locInput = document.getElementById('location');
     if (navigator.geolocation) {
-        document.getElementById('location').value = 'Fetching location...';
-        navigator.geolocation.getCurrentPosition(function(position) {
-            document.getElementById('location').value = 
-                'Lat: ' + position.coords.latitude.toFixed(4) + ', Long: ' + position.coords.longitude.toFixed(4);
-        }, function() {
-            document.getElementById('location').value = '';
-            alert('Location access denied. You can continue without location.');
-        });
+        locInput.value = 'Fetching location...';
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                locInput.value = 'Lat: ' + position.coords.latitude.toFixed(4) + 
+                                ', Long: ' + position.coords.longitude.toFixed(4);
+            },
+            function(error) {
+                locInput.value = '';
+                alert('Location access denied. You can continue without location.');
+                console.error("Location error:", error);
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
     } else {
         alert('Geolocation not supported by your browser.');
     }
 }
 
-// Form Submission
-document.getElementById('emiForm').addEventListener('submit', function(e) {
+function handleSubmit(e) {
     e.preventDefault();
+    e.stopPropagation();
     
-    if (!validateStep(currentStep)) return;
+    console.log("Form submit triggered!");
     
-    document.querySelector('.main-wrapper').classList.add('hidden');
-    document.getElementById('loadingScreen').classList.remove('hidden');
-
+    if (!validateStep(currentStep)) {
+        console.log("Final validation failed");
+        return false;
+    }
+    
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Submitting...';
+    }
+    
+    console.log("Showing loading screen");
+    
+    // Hide form, show loading
+    const formContainer = document.querySelector('.main-wrapper');
+    const loadingScreen = document.getElementById('loadingScreen');
+    
+    if (formContainer) formContainer.style.display = 'none';
+    if (loadingScreen) loadingScreen.classList.remove('hidden');
+    
+    // Process application
     setTimeout(function() {
-        document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('successScreen').classList.remove('hidden');
+        console.log("Generating Application ID");
         
         const today = new Date();
         const dateStr = today.getFullYear().toString() + 
@@ -97,23 +164,58 @@ document.getElementById('emiForm').addEventListener('submit', function(e) {
         const randomNum = Math.floor(100000 + Math.random() * 900000);
         const appId = `EMI-${dateStr}-${randomNum}`;
         
-        document.getElementById('appId').innerText = appId;
+        const appIdElement = document.getElementById('appId');
+        if (appIdElement) appIdElement.innerText = appId;
+        
+        const loadingScreen2 = document.getElementById('loadingScreen');
+        const successScreen = document.getElementById('successScreen');
+        
+        if (loadingScreen2) loadingScreen2.classList.add('hidden');
+        if (successScreen) successScreen.classList.remove('hidden');
+        
+        console.log("Success! Application ID:", appId);
     }, 2500);
-});
+    
+    return false;
+}
 
 function copyId() {
-    const id = document.getElementById('appId').innerText;
-    navigator.clipboard.writeText(id).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        btn.innerText = '✅ Copied!';
-        setTimeout(() => { btn.innerText = '📋 Copy Application ID'; }, 2000);
-    }).catch(() => {
+    const appId = document.getElementById('appId');
+    if (!appId) return;
+    
+    const id = appId.innerText;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(id).then(function() {
+            const btn = document.querySelector('.copy-btn');
+            if (btn) {
+                const originalText = btn.innerText;
+                btn.innerText = '✅ Copied!';
+                setTimeout(function() {
+                    btn.innerText = originalText;
+                }, 2000);
+            }
+        }).catch(function(err) {
+            // Fallback
+            const textArea = document.createElement('textarea');
+            textArea.value = id;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Application ID Copied: ' + id);
+        });
+    } else {
         alert('Application ID: ' + id);
-    });
+    }
 }
 
 function backToHome() {
     location.reload();
 }
 
-updateProgress();
+// Make functions global for onclick handlers
+window.changeStep = changeStep;
+window.getLocation = getLocation;
+window.copyId = copyId;
+window.backToHome = backToHome;
