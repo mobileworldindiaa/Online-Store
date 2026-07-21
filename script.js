@@ -6,46 +6,54 @@ function updateProgress() {
     document.getElementById('progressBar').style.width = progress + '%';
     document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
     
-    // Show/hide steps
     for (let i = 1; i <= totalSteps; i++) {
         const step = document.getElementById('step' + i);
-        if (i === currentStep) {
-            step.classList.add('active');
-        } else {
-            step.classList.remove('active');
-        }
+        if (i === currentStep) step.classList.add('active');
+        else step.classList.remove('active');
     }
     
-    // Button visibility
     document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'block';
     document.getElementById('nextBtn').style.display = currentStep === totalSteps ? 'none' : 'block';
     document.getElementById('submitBtn').style.display = currentStep === totalSteps ? 'block' : 'none';
 }
 
+// FIXED VALIDATION LOGIC
 function validateStep(step) {
     const stepEl = document.getElementById('step' + step);
-    const inputs = stepEl.querySelectorAll('input[required], select[required]');
+    const inputs = stepEl.querySelectorAll('input, select');
     let valid = true;
     
     inputs.forEach(input => {
-        if (!input.value.trim()) {
+        if (input.readOnly) return; // Skip location field
+
+        let isValid = true;
+
+        if (input.type === 'checkbox') {
+            if (!input.checked) isValid = false;
+        } else if (input.type === 'file') {
+            if (input.files.length === 0) isValid = false;
+        } else {
+            if (!input.value.trim()) isValid = false;
+        }
+
+        if (!isValid) {
             valid = false;
             input.style.borderColor = '#e74c3c';
+            input.style.backgroundColor = '#ffebee';
         } else {
             input.style.borderColor = '#27ae60';
+            input.style.backgroundColor = '#fff';
         }
     });
     
     if (!valid) {
-        alert('⚠️ Please fill all required fields before proceeding!');
+        alert('⚠️ Please fill all required fields in this step!');
     }
     return valid;
 }
 
 function changeStep(direction) {
-    if (direction === 1 && !validateStep(currentStep)) {
-        return;
-    }
+    if (direction === 1 && !validateStep(currentStep)) return;
     
     currentStep += direction;
     if (currentStep < 1) currentStep = 1;
@@ -54,7 +62,6 @@ function changeStep(direction) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Location (Optional)
 function getLocation() {
     if (navigator.geolocation) {
         document.getElementById('location').value = 'Fetching location...';
@@ -76,16 +83,13 @@ document.getElementById('emiForm').addEventListener('submit', function(e) {
     
     if (!validateStep(currentStep)) return;
     
-    // Show Loading
     document.querySelector('.main-wrapper').classList.add('hidden');
     document.getElementById('loadingScreen').classList.remove('hidden');
 
-    // Simulate Processing (2.5 seconds)
     setTimeout(function() {
         document.getElementById('loadingScreen').classList.add('hidden');
         document.getElementById('successScreen').classList.remove('hidden');
         
-        // Generate Application ID
         const today = new Date();
         const dateStr = today.getFullYear().toString() + 
                         (today.getMonth()+1).toString().padStart(2, '0') + 
@@ -97,7 +101,6 @@ document.getElementById('emiForm').addEventListener('submit', function(e) {
     }, 2500);
 });
 
-// Copy ID
 function copyId() {
     const id = document.getElementById('appId').innerText;
     navigator.clipboard.writeText(id).then(() => {
@@ -109,10 +112,8 @@ function copyId() {
     });
 }
 
-// Back to Home
 function backToHome() {
     location.reload();
 }
 
-// Initialize
 updateProgress();
