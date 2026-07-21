@@ -8,205 +8,104 @@
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div class="form-header">
-        <h1>📋 EMI Application Form</h1>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="step-indicator" id="stepIndicator">Step 1 of 8</div>
-    </div>
-
+<!-- MAIN FORM -->
+<div id="formContainer" class="container">
+    <h1>EMI Application Form</h1>
     <form id="emiForm">
-        <!-- STEP 1 -->
-        <div class="step" id="step1">
-            <h2>1. Customer Details</h2>
-            <input type="text" id="fullName" placeholder="Full Name *">
-            <input type="tel" id="mobile" placeholder="Mobile Number *">
-            <input type="email" id="email" placeholder="Email Address *">
-            <input type="date" id="dob">
-            <select id="gender">
-                <option value="">Select Gender *</option>
-                <option>Male</option><option>Female</option><option>Other</option>
-            </select>
-            <input type="text" id="fatherName" placeholder="Father's Name *">
-            <input type="text" id="occupation" placeholder="Occupation *">
-            <input type="number" id="income" placeholder="Monthly Income (₹) *">
-        </div>
+        <!-- 1. Customer Details -->
+        <fieldset><legend>1. Customer Details</legend>
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="tel" id="mobile" placeholder="Mobile Number" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="date" id="dob" required>
+            <select id="gender" required><option value="">Select Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+            <input type="text" id="fatherName" placeholder="Father's Name" required>
+            <input type="text" id="occupation" placeholder="Occupation" required>
+            <input type="number" id="income" placeholder="Monthly Income (₹)" required>
+        </fieldset>
 
-        <!-- STEP 2 -->
-        <div class="step" id="step2">
-            <h2>2. Address Details</h2>
-            <input type="text" id="houseNo" placeholder="House/Flat No. *">
-            <input type="text" id="street" placeholder="Street/Locality *">
-            <input type="text" id="city" placeholder="City *">
-            <input type="text" id="district" placeholder="District *">
-            <input type="text" id="state" placeholder="State *">
-            <input type="text" id="pincode" placeholder="PIN Code *">
-        </div>
+        <!-- 2. Address Details -->
+        <fieldset><legend>2. Address Details</legend>
+            <input type="text" id="houseNo" placeholder="House/Flat No." required>
+            <input type="text" id="street" placeholder="Street/Locality" required>
+            <input type="text" id="city" placeholder="City" required>
+            <input type="text" id="district" placeholder="District" required>
+            <input type="text" id="state" placeholder="State" required>
+            <input type="text" id="pincode" placeholder="PIN Code" required>
+        </fieldset>
 
-        <!-- STEP 3 -->
-        <div class="step" id="step3">
-            <h2>3. Identity Details</h2>
-            <input type="text" id="aadhaar" placeholder="Aadhaar Number *">
-            <input type="text" id="pan" placeholder="PAN Number *">
-        </div>
+        <!-- 3. Identity Details -->
+        <fieldset><legend>3. Identity Details</legend>
+            <input type="text" id="aadhaar" placeholder="Aadhaar Number" required>
+            <input type="text" id="pan" placeholder="PAN Number" required>
+        </fieldset>
 
-        <!-- STEP 4 -->
-        <div class="step" id="step4">
-            <h2>4. Product Details</h2>
-            <input type="text" id="productName" placeholder="Product Name *">
-            <input type="number" id="productPrice" placeholder="Product Price (₹) *">
-            <input type="number" id="downPayment" placeholder="Down Payment (₹) *">
-            <select id="emiPlan">
-                <option value="">Select EMI Plan *</option>
+        <!-- 4. Product Details -->
+        <fieldset><legend>4. Product Details</legend>
+            <input type="text" id="productName" placeholder="Product Name" required>
+            <input type="number" id="productPrice" placeholder="Product Price (₹)" required>
+            <input type="number" id="downPayment" placeholder="Down Payment (₹)" required>
+            <select id="emiPlan" required>
+                <option value="">Select EMI Plan</option>
                 <option>3 Months</option><option>6 Months</option><option>9 Months</option>
                 <option>12 Months</option><option>18 Months</option><option>24 Months</option>
             </select>
-        </div>
+        </fieldset>
 
-        <!-- STEP 5 -->
-        <div class="step" id="step5">
-            <h2>5 & 6. Order & Payment Verification</h2>
-            <input type="text" id="orderId" placeholder="Dukaan Order ID *">
-            <label class="file-label">📸 Order Screenshot *</label>
-            <input type="file" id="orderScreenshot" accept="image/*">
-            <input type="text" id="txnId" placeholder="Payment Transaction ID / UTR *">
-            <label class="file-label">📸 Payment Screenshot *</label>
-            <input type="file" id="paymentScreenshot" accept="image/*">
-        </div>
+        <!-- 5 & 6. Verifications -->
+        <fieldset><legend>5 & 6. Order & Payment Verification</legend>
+            <input type="text" id="orderId" placeholder="Dukaan Order ID" required>
+            <input type="file" id="orderScreenshot" accept="image/*" required>
+            <input type="text" id="txnId" placeholder="Payment Transaction ID / UTR" required>
+            <input type="file" id="paymentScreenshot" accept="image/*" required>
+        </fieldset>
 
-        <!-- STEP 6 -->
-        <div class="step" id="step6">
-            <h2>7. Emergency Contacts</h2>
-            <input type="text" id="brotherName" placeholder="Brother Name *">
-            <input type="tel" id="brotherMobile" placeholder="Brother Mobile *">
-            <input type="text" id="parentName" placeholder="Parent Name *">
-            <input type="tel" id="parentMobile" placeholder="Parent Mobile *">
-            <input type="text" id="friendName" placeholder="Friend Name *">
-            <input type="tel" id="friendMobile" placeholder="Friend Mobile *">
-        </div>
+        <!-- 7. Emergency Contacts -->
+        <fieldset><legend>7. Emergency Contacts</legend>
+            <input type="text" id="brotherName" placeholder="Brother Name" required>
+            <input type="tel" id="brotherMobile" placeholder="Brother Mobile" required>
+            <input type="text" id="parentName" placeholder="Parent Name" required>
+            <input type="tel" id="parentMobile" placeholder="Parent Mobile" required>
+            <input type="text" id="friendName" placeholder="Friend Name" required>
+            <input type="tel" id="friendMobile" placeholder="Friend Mobile" required>
+        </fieldset>
 
-        <!-- STEP 7 -->
-        <div class="step" id="step7">
-            <h2>8. Document Upload</h2>
-            <label class="file-label"> Aadhaar Front *</label>
-            <input type="file" id="aadhaarFront" accept="image/*">
-            <label class="file-label"> Aadhaar Back *</label>
-            <input type="file" id="aadhaarBack" accept="image/*">
-            <label class="file-label">📄 PAN Card *</label>
-            <input type="file" id="panCard" accept="image/*">
-            <label class="file-label"> Customer Selfie *</label>
-            <input type="file" id="selfie" accept="image/*" capture="user">
-        </div>
+        <!-- 8. Document Upload -->
+        <fieldset><legend>8. Document Upload</legend>
+            <label>Aadhaar Front:</label><input type="file" id="aadhaarFront" accept="image/*" required>
+            <label>Aadhaar Back:</label><input type="file" id="aadhaarBack" accept="image/*" required>
+            <label>PAN Card:</label><input type="file" id="panCard" accept="image/*" required>
+            <label>Customer Selfie (Live Camera):</label><input type="file" id="selfie" accept="image/*" capture="user" required>
+        </fieldset>
 
-        <!-- STEP 8 -->
-        <div class="step" id="step8">
-            <h2>9. Permissions & Declaration</h2>
-            <button type="button" class="loc-btn" onclick="getLocation()">📍 Fetch Location (Optional)</button>
-            <input type="text" id="location" placeholder="Location (Optional)" readonly>
-            <label class="checkbox-label">
-                <input type="checkbox" id="declaration">
-                <span>I declare all information is true and correct. *</span>
-            </label>
-        </div>
+        <!-- 9. Permissions & Declaration -->
+        <fieldset><legend>9. Permissions & Declaration</legend>
+            <button type="button" id="locBtn" onclick="getLocation()">📍 Fetch Current Location</button>
+            <input type="text" id="location" placeholder="Location will appear here" readonly>
+            <label class="checkbox-label"><input type="checkbox" id="declaration" required> I hereby declare that all the information provided is true and correct.</label>
+        </fieldset>
 
-        <div class="nav-buttons">
-            <button type="button" id="prevBtn" class="nav-btn prev" onclick="changeStep(-1)">← Previous</button>
-            <button type="button" id="nextBtn" class="nav-btn next" onclick="changeStep(1)">Next →</button>
-            <button type="button" id="submitBtn" class="nav-btn submit" onclick="submitForm()">Submit EMI Application</button>
-        </div>
+        <!-- 10. Submit -->
+        <button type="submit" id="submitBtn" class="submit-btn">Submit EMI Application</button>
     </form>
 </div>
 
+<!-- LOADING SCREEN -->
 <div id="loadingScreen" class="screen hidden">
     <div class="spinner"></div>
-    <h2>Processing...</h2>
+    <h2>Processing your application...</h2>
 </div>
 
+<!-- SUCCESS SCREEN -->
 <div id="successScreen" class="screen hidden">
-    <div class="success-icon">✅</div>
-    <h2>Application Submitted!</h2>
-    <div class="app-id-box">
-        <p>Application ID:</p>
-        <h3 id="appId"></h3>
-    </div>
-    <button class="copy-btn" onclick="copyId()">📋 Copy ID</button>
-    <button class="back-btn" onclick="backToHome()">🏠 Back to Home</button>
+    <h2>✅ Application Submitted Successfully!</h2>
+    <p>Your Application ID:</p>
+    <h3 id="appId"></h3>
+    <button onclick="copyId()">📋 Copy Application ID</button>
+    <button onclick="downloadReceipt()">📥 Download Receipt</button>
+    <button onclick="backToHome()" class="back-btn">🏠 Back to Home</button>
 </div>
 
-<script>
-let currentStep = 1;
-const totalSteps = 8;
-
-function updateProgress() {
-    document.getElementById('progressBar').style.width = (currentStep/totalSteps*100) + '%';
-    document.getElementById('stepIndicator').innerText = 'Step ' + currentStep + ' of ' + totalSteps;
-    
-    for(let i=1; i<=totalSteps; i++) {
-        document.getElementById('step'+i).style.display = (i===currentStep) ? 'block' : 'none';
-    }
-    
-    document.getElementById('prevBtn').style.display = (currentStep===1) ? 'none' : 'block';
-    document.getElementById('nextBtn').style.display = (currentStep===totalSteps) ? 'none' : 'block';
-    document.getElementById('submitBtn').style.display = (currentStep===totalSteps) ? 'block' : 'none';
-}
-
-function changeStep(dir) {
-    currentStep += dir;
-    if(currentStep < 1) currentStep = 1;
-    if(currentStep > totalSteps) currentStep = totalSteps;
-    updateProgress();
-    window.scrollTo(0,0);
-}
-
-function getLocation() {
-    if(navigator.geolocation) {
-        document.getElementById('location').value = 'Fetching...';
-        navigator.geolocation.getCurrentPosition(
-            function(pos) {
-                document.getElementById('location').value = 'Lat: '+pos.coords.latitude.toFixed(4)+', Long: '+pos.coords.longitude.toFixed(4);
-            },
-            function() { alert('Location denied'); }
-        );
-    }
-}
-
-function submitForm() {
-    var chk = document.getElementById('declaration');
-    if(!chk.checked) {
-        alert('Please accept the declaration');
-        return;
-    }
-    
-    document.querySelector('.main-wrapper').style.display = 'none';
-    document.getElementById('loadingScreen').classList.remove('hidden');
-    
-    setTimeout(function() {
-        var today = new Date();
-        var dateStr = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
-        var randomNum = Math.floor(100000 + Math.random()*900000);
-        var appId = 'EMI-' + dateStr + '-' + randomNum;
-        
-        document.getElementById('appId').innerText = appId;
-        document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('successScreen').classList.remove('hidden');
-    }, 2000);
-}
-
-function copyId() {
-    var id = document.getElementById('appId').innerText;
-    navigator.clipboard.writeText(id).then(function() {
-        alert('Copied: ' + id);
-    });
-}
-
-function backToHome() {
-    location.reload();
-}
-
-updateProgress();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
