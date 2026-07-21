@@ -1,131 +1,80 @@
-let currentStep = 1;
-const totalSteps = 8;
-
-function updateProgress() {
-    const progress = (currentStep / totalSteps) * 100;
-    document.getElementById('progressBar').style.width = progress + '%';
-    document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
-    
-    for (let i = 1; i <= totalSteps; i++) {
-        const step = document.getElementById('step' + i);
-        if (step) {
-            step.style.display = (i === currentStep) ? 'block' : 'none';
-        }
-    }
-    
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    
-    if (prevBtn) prevBtn.style.display = (currentStep === 1) ? 'none' : 'block';
-    if (nextBtn) nextBtn.style.display = (currentStep === totalSteps) ? 'none' : 'block';
-    if (submitBtn) submitBtn.style.display = (currentStep === totalSteps) ? 'block' : 'none';
-}
-
-function changeStep(direction) {
-    currentStep += direction;
-    if (currentStep < 1) currentStep = 1;
-    if (currentStep > totalSteps) currentStep = totalSteps;
-    updateProgress();
-    window.scrollTo(0, 0);
-}
-
+// Location Fetch
 function getLocation() {
-    const locInput = document.getElementById('location');
     if (navigator.geolocation) {
-        locInput.value = 'Fetching location...';
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                locInput.value = 'Lat: ' + position.coords.latitude.toFixed(4) + 
-                                ', Long: ' + position.coords.longitude.toFixed(4);
-            },
-            function() {
-                locInput.value = '';
-                alert('Location access denied.');
-            }
-        );
+        navigator.geolocation.getCurrentPosition(function(position) {
+            document.getElementById('location').value = 
+                "Lat: " + position.coords.latitude.toFixed(4) + ", Long: " + position.coords.longitude.toFixed(4);
+        }, function() {
+            alert("Location permission denied!");
+        });
     }
 }
 
-// SIMPLE SUBMIT FUNCTION - YEH HAI MAIN CODE
-function submitForm() {
-    console.log("Submit button clicked!");
+// Form Submission
+document.getElementById('emiForm').addEventListener('submit', function(e) {
+    e.preventDefault();
     
-    // Declaration check karein
-    const declaration = document.getElementById('declaration');
-    if (!declaration || !declaration.checked) {
-        alert('⚠️ Please accept the declaration to proceed.');
-        return;
-    }
-    
-    // Loading screen dikhayein
-    const formContainer = document.querySelector('.main-wrapper');
-    const loadingScreen = document.getElementById('loadingScreen');
-    
-    if (formContainer) formContainer.style.display = 'none';
-    if (loadingScreen) loadingScreen.classList.remove('hidden');
-    
-    console.log("Loading screen shown");
-    
-    // 2 second baad success screen
+    // Show Loading
+    document.getElementById('formContainer').classList.add('hidden');
+    document.getElementById('loadingScreen').classList.remove('hidden');
+
+    // Simulate Processing (2 seconds)
     setTimeout(function() {
-        // Application ID generate karein
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('successScreen').classList.remove('hidden');
+        
+        // Generate Application ID (EMI-YYYYMMDD-XXXXXX)
         const today = new Date();
         const dateStr = today.getFullYear().toString() + 
-                        String(today.getMonth() + 1).padStart(2, '0') + 
-                        String(today.getDate()).padStart(2, '0');
+                        (today.getMonth()+1).toString().padStart(2, '0') + 
+                        today.getDate().toString().padStart(2, '0');
         const randomNum = Math.floor(100000 + Math.random() * 900000);
-        const appId = 'EMI-' + dateStr + '-' + randomNum;
+        const appId = `EMI-${dateStr}-${randomNum}`;
         
-        // Application ID set karein
-        const appIdElement = document.getElementById('appId');
-        if (appIdElement) appIdElement.innerText = appId;
-        
-        // Loading hide, success show
-        const loadingScreen2 = document.getElementById('loadingScreen');
-        const successScreen = document.getElementById('successScreen');
-        
-        if (loadingScreen2) loadingScreen2.classList.add('hidden');
-        if (successScreen) successScreen.classList.remove('hidden');
-        
-        console.log("Success! Application ID:", appId);
+        document.getElementById('appId').innerText = appId;
     }, 2000);
-}
+});
 
+// Copy ID
 function copyId() {
-    const appId = document.getElementById('appId');
-    if (!appId) return;
-    
-    const id = appId.innerText;
-    
-    // Copy to clipboard
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(id).then(function() {
-            const btn = document.querySelector('.copy-btn');
-            if (btn) {
-                btn.innerText = '✅ Copied!';
-                setTimeout(function() {
-                    btn.innerText = '📋 Copy Application ID';
-                }, 2000);
-            }
-        }).catch(function() {
-            alert('Application ID: ' + id);
-        });
-    } else {
-        alert('Application ID: ' + id);
-    }
+    const id = document.getElementById('appId').innerText;
+    navigator.clipboard.writeText(id).then(() => {
+        alert("Application ID Copied: " + id);
+    });
 }
 
+// Download Receipt
+function downloadReceipt() {
+    const appId = document.getElementById('appId').innerText;
+    const name = document.getElementById('fullName').value;
+    const product = document.getElementById('productName').value;
+    const emi = document.getElementById('emiPlan').value;
+    
+    const receiptContent = `
+        ====================================
+           EMI APPLICATION RECEIPT
+        ====================================
+        Application ID : ${appId}
+        Date           : ${new Date().toLocaleString()}
+        
+        Customer Name  : ${name}
+        Product        : ${product}
+        EMI Plan       : ${emi}
+        
+        Status         : SUBMITTED SUCCESSFULLY
+        ====================================
+        Thank you for your application!
+    `;
+    
+    const blob = new Blob([receiptContent], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Receipt_${appId}.txt`;
+    a.click();
+}
+
+// Back to Home
 function backToHome() {
     location.reload();
 }
-
-// Global functions
-window.changeStep = changeStep;
-window.getLocation = getLocation;
-window.submitForm = submitForm;
-window.copyId = copyId;
-window.backToHome = backToHome;
-
-// Initialize
-updateProgress();
