@@ -1,37 +1,15 @@
 let currentStep = 1;
 const totalSteps = 8;
 
-// Page load hone par
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Page loaded successfully");
-    updateProgress();
-    
-    // Form submit handler
-    const form = document.getElementById('emiForm');
-    if (form) {
-        console.log("Form found, attaching submit listener");
-        form.addEventListener('submit', handleSubmit, false);
-    }
-});
-
 function updateProgress() {
     const progress = (currentStep / totalSteps) * 100;
-    const progressBar = document.getElementById('progressBar');
-    const stepIndicator = document.getElementById('stepIndicator');
-    
-    if (progressBar) progressBar.style.width = progress + '%';
-    if (stepIndicator) stepIndicator.innerText = `Step ${currentStep} of ${totalSteps}`;
+    document.getElementById('progressBar').style.width = progress + '%';
+    document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
     
     for (let i = 1; i <= totalSteps; i++) {
         const step = document.getElementById('step' + i);
         if (step) {
-            if (i === currentStep) {
-                step.classList.add('active');
-                step.style.display = 'block';
-            } else {
-                step.classList.remove('active');
-                step.style.display = 'none';
-            }
+            step.style.display = (i === currentStep) ? 'block' : 'none';
         }
     }
     
@@ -39,71 +17,17 @@ function updateProgress() {
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
     
-    if (prevBtn) prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
-    if (nextBtn) nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
-    if (submitBtn) {
-        submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
-        submitBtn.disabled = false;
-    }
-}
-
-function validateStep(step) {
-    const stepEl = document.getElementById('step' + step);
-    if (!stepEl) return false;
-    
-    const inputs = stepEl.querySelectorAll('input:not([readonly]), select');
-    let valid = true;
-    let firstInvalidField = null;
-    
-    inputs.forEach(input => {
-        let isEmpty = false;
-        
-        if (input.type === 'checkbox') {
-            if (!input.checked && step === 8) isEmpty = true;
-        } else if (input.type === 'file') {
-            if (input.files.length === 0) isEmpty = true;
-        } else {
-            if (!input.value || input.value.trim() === '') isEmpty = true;
-        }
-        
-        if (isEmpty) {
-            valid = false;
-            input.style.borderColor = '#e74c3c';
-            input.style.backgroundColor = '#ffebee';
-            if (!firstInvalidField) firstInvalidField = input;
-        } else {
-            input.style.borderColor = '#27ae60';
-            input.style.backgroundColor = '#fff';
-        }
-    });
-    
-    if (!valid) {
-        if (firstInvalidField) {
-            firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        alert('⚠️ Please fill all required fields marked with *');
-    }
-    
-    return valid;
+    if (prevBtn) prevBtn.style.display = (currentStep === 1) ? 'none' : 'block';
+    if (nextBtn) nextBtn.style.display = (currentStep === totalSteps) ? 'none' : 'block';
+    if (submitBtn) submitBtn.style.display = (currentStep === totalSteps) ? 'block' : 'none';
 }
 
 function changeStep(direction) {
-    console.log("Changing step by:", direction);
-    
-    if (direction === 1) {
-        if (!validateStep(currentStep)) {
-            console.log("Validation failed");
-            return;
-        }
-    }
-    
     currentStep += direction;
     if (currentStep < 1) currentStep = 1;
     if (currentStep > totalSteps) currentStep = totalSteps;
-    
-    console.log("Current step is now:", currentStep);
     updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
 }
 
 function getLocation() {
@@ -115,58 +39,49 @@ function getLocation() {
                 locInput.value = 'Lat: ' + position.coords.latitude.toFixed(4) + 
                                 ', Long: ' + position.coords.longitude.toFixed(4);
             },
-            function(error) {
+            function() {
                 locInput.value = '';
-                alert('Location access denied. You can continue without location.');
-                console.error("Location error:", error);
-            },
-            { enableHighAccuracy: true, timeout: 10000 }
+                alert('Location access denied.');
+            }
         );
-    } else {
-        alert('Geolocation not supported by your browser.');
     }
 }
 
-function handleSubmit(e) {
-    e.preventDefault();
-    e.stopPropagation();
+// SIMPLE SUBMIT FUNCTION - YEH HAI MAIN CODE
+function submitForm() {
+    console.log("Submit button clicked!");
     
-    console.log("Form submit triggered!");
-    
-    if (!validateStep(currentStep)) {
-        console.log("Final validation failed");
-        return false;
+    // Declaration check karein
+    const declaration = document.getElementById('declaration');
+    if (!declaration || !declaration.checked) {
+        alert('⚠️ Please accept the declaration to proceed.');
+        return;
     }
     
-    const submitBtn = document.getElementById('submitBtn');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Submitting...';
-    }
-    
-    console.log("Showing loading screen");
-    
-    // Hide form, show loading
+    // Loading screen dikhayein
     const formContainer = document.querySelector('.main-wrapper');
     const loadingScreen = document.getElementById('loadingScreen');
     
     if (formContainer) formContainer.style.display = 'none';
     if (loadingScreen) loadingScreen.classList.remove('hidden');
     
-    // Process application
+    console.log("Loading screen shown");
+    
+    // 2 second baad success screen
     setTimeout(function() {
-        console.log("Generating Application ID");
-        
+        // Application ID generate karein
         const today = new Date();
         const dateStr = today.getFullYear().toString() + 
-                        (today.getMonth()+1).toString().padStart(2, '0') + 
-                        today.getDate().toString().padStart(2, '0');
+                        String(today.getMonth() + 1).padStart(2, '0') + 
+                        String(today.getDate()).padStart(2, '0');
         const randomNum = Math.floor(100000 + Math.random() * 900000);
-        const appId = `EMI-${dateStr}-${randomNum}`;
+        const appId = 'EMI-' + dateStr + '-' + randomNum;
         
+        // Application ID set karein
         const appIdElement = document.getElementById('appId');
         if (appIdElement) appIdElement.innerText = appId;
         
+        // Loading hide, success show
         const loadingScreen2 = document.getElementById('loadingScreen');
         const successScreen = document.getElementById('successScreen');
         
@@ -174,9 +89,7 @@ function handleSubmit(e) {
         if (successScreen) successScreen.classList.remove('hidden');
         
         console.log("Success! Application ID:", appId);
-    }, 2500);
-    
-    return false;
+    }, 2000);
 }
 
 function copyId() {
@@ -185,25 +98,18 @@ function copyId() {
     
     const id = appId.innerText;
     
+    // Copy to clipboard
     if (navigator.clipboard) {
         navigator.clipboard.writeText(id).then(function() {
             const btn = document.querySelector('.copy-btn');
             if (btn) {
-                const originalText = btn.innerText;
                 btn.innerText = '✅ Copied!';
                 setTimeout(function() {
-                    btn.innerText = originalText;
+                    btn.innerText = '📋 Copy Application ID';
                 }, 2000);
             }
-        }).catch(function(err) {
-            // Fallback
-            const textArea = document.createElement('textarea');
-            textArea.value = id;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            alert('Application ID Copied: ' + id);
+        }).catch(function() {
+            alert('Application ID: ' + id);
         });
     } else {
         alert('Application ID: ' + id);
@@ -214,8 +120,12 @@ function backToHome() {
     location.reload();
 }
 
-// Make functions global for onclick handlers
+// Global functions
 window.changeStep = changeStep;
 window.getLocation = getLocation;
+window.submitForm = submitForm;
 window.copyId = copyId;
 window.backToHome = backToHome;
+
+// Initialize
+updateProgress();
